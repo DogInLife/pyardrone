@@ -404,6 +404,10 @@ class Pwm(OptionHeader):
     # WARNING: new navdata (FC 26/07/2011)
     altitude_prop = float32_t
     altitude_der = float32_t
+    unknown_var_1 = float32_t
+    unknown_var_2 = float32_t
+    unknown_var_3 = float32_t
+    unknown_var_4 = float32_t
 
 
 @index.register(10)
