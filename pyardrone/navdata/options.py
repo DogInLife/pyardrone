@@ -305,7 +305,7 @@ class EulerAngles(OptionHeader):
 
     'Corresponds to C struct ``navdata_euler_angles_t``.'
 
-    _attrname = 'eular_angles'
+    _attrname = 'euler_angles'
 
     theta_a = float32_t
     phi_a = float32_t
