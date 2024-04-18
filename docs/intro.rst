@@ -16,7 +16,7 @@ Installation
 
 .. code-block:: bash
 
-    pip install pyardrone
+    pip install -e git+https://github.com/DogInLife/pyardrone#egg=pyardrone
 
 Basic Usage
 -----------
