@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = (
     'REF', 'PCMD', 'PCMD_MAG', 'FTRIM', 'CONFIG',
-    'CONFIG_IDS', 'COMWDG', 'CALIB', 'CTRL'
+    'CONFIG_IDS', 'COMWDG', 'CALIB', 'CTRL', 'PWM'
 )
 
 
@@ -161,6 +161,18 @@ class CTRL(ATCommand):
     )
 
     zero = parameters.Int32(default=0)
+
+
+class PWM(ATCommand):
+
+    '''
+    PWM
+    '''
+
+    motor1 = parameters.Int32('drone motor 1 power, [0...255]')
+    motor2 = parameters.Int32('drone motor 2 power, [0...255]')
+    motor3 = parameters.Int32('drone motor 3 power, [0...255]')
+    motor4 = parameters.Int32('drone motor 4 power, [0...255]')
 
 
 class ATClient(BaseClient):

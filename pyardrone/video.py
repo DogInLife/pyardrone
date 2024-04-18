@@ -99,13 +99,14 @@ class VideoClient(BaseClient):
         logger.info(
             'Connected to video port {}'.format(self.host, self.video_port))
         ssock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        while not self.closed:
+        while not self.closed and not self.video_closed:
             data = rsock.recv(4096)
             if data.startswith(PaVE.HEADER):
                 data = data[ctypes.sizeof(PaVE):]
             ssock.sendto(data, ('localhost', self.redirect_port))
         rsock.close()
         ssock.close()
+        self.thread_video_client_working = False
 
     def _video_opencv_job(self):
         capture = cv2.VideoCapture(
@@ -113,12 +114,17 @@ class VideoClient(BaseClient):
         )
         logger.info('initiated VideoCapture at port {}'.format(
             self.redirect_port))
-        while not self.closed:
+        while not self.closed and not self.video_closed:
             ret, im = capture.read()
-            self.frame_recieved(im)
-            self.video_ready.set()
+            if (ret):
+                self.frame_recieved(im)
+                self.video_ready.set()
+            else:
+                self.video_ready.clear()
+        self.thread_video_opencv_working = False
 
     def _connect(self):
+        self.video_closed = False
         if self.redirect_port is None:
             self.redirect_port = get_free_udp_port()
             logger.info('Selected free udp port {}'.format(self.redirect_port))
@@ -133,9 +139,12 @@ class VideoClient(BaseClient):
 
         self._video_client_thread.start()
         self._video_opencv_thread.start()
+        self.thread_video_client_working = True
+        self.thread_video_opencv_working = True
 
     def _close(self):
-        pass
+        self.video_closed = True
+        # pass
 
     def frame_recieved(self, im):
         self.frame = im
@@ -148,12 +157,25 @@ class VideoMixin:
 
     def _connect(self):
         super()._connect()
+        self.connect_VideoMixin()
+
+    def _close(self):
+        self.close_VideoMixin()
+        super()._close()
+
+    def reconnect_VideoMixin(self):
+        logger.info("reconnect VideoMixin")
+        self.close_VideoMixin()
+        while self.video_client.thread_video_client_working and self.video_client.thread_video_opencv_working:
+            pass
+        self.connect_VideoMixin()
+        
+    def connect_VideoMixin(self):
         self.video_client = VideoClient(self.host, self.video_port)
         self.video_client.connect()
 
-    def _close(self):
+    def close_VideoMixin(self):
         self.video_client.close()
-        super()._close()
 
     @property
     def frame(self):

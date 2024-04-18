@@ -90,10 +90,12 @@ class ARDroneBase(BaseClient):
         self.navdata_client = NavDataClient(self.host, self.navdata_port)
         self.at_client.connect()
         self.navdata_client.connect()
+        logger.info("connect ARDroneBase")
 
     def _close(self):
         self.at_client.close()
         self.navdata_client.close()
+        logger.info("close ARDroneBase")
 
 
 class HelperMixin:
@@ -165,6 +167,13 @@ class HelperMixin:
         Sends the hover command.
         '''
         self.send(at.PCMD(flag=0))
+
+    def pwm(self):
+        '''
+        Sends the pwm command.
+        '''
+        self.send(at.PWM(self, motor1 = 0, motor2 = 0, motor3 = 0, motor4 = 0))
+
 
 
 class ARDrone(HelperMixin, VideoMixin, ARDroneBase):
