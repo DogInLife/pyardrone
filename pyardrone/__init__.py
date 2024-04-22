@@ -176,9 +176,15 @@ class HelperMixin:
 
     def ftrim(self):
         '''
-        Sends the flat trim command.
+        Sends the flat trims command.
         '''
         self.send(at.FTRIM())
+
+    def mtrim(self, pitch = 0, roll = 0, yaw = 0):
+        '''
+        Sends the manual trims command.
+        '''
+        self.send(at.MTRIM(pitch, roll, yaw))
 
 
 class ARDrone(HelperMixin, VideoMixin, ARDroneBase):

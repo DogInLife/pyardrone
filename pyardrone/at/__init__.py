@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = (
     'REF', 'PCMD', 'PCMD_MAG', 'FTRIM', 'CONFIG',
-    'CONFIG_IDS', 'COMWDG', 'CALIB', 'CTRL', 'PWM'
+    'CONFIG_IDS', 'COMWDG', 'CALIB', 'CTRL', 'PWM', 'MTRIM'
 )
 
 
@@ -166,13 +166,24 @@ class CTRL(ATCommand):
 class PWM(ATCommand):
 
     '''
-    PWM
+    Sets the drone motor command directly
     '''
 
     motor1 = parameters.Int32('drone motor 1 power, [0...255]')
     motor2 = parameters.Int32('drone motor 2 power, [0...255]')
     motor3 = parameters.Int32('drone motor 3 power, [0...255]')
     motor4 = parameters.Int32('drone motor 4 power, [0...255]')
+
+
+class MTRIM(ATCommand):
+
+    '''
+    Sets a manual trim (offset) on the drone commands
+    '''
+
+    pitch = parameters.Float('drone orientation pitch, [-1...1]')
+    roll = parameters.Float('drone orientation roll, [-1...1]')
+    yaw = parameters.Float('drone orientation yaw, [-1...1]')
 
 
 class ATClient(BaseClient):
