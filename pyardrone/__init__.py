@@ -168,12 +168,17 @@ class HelperMixin:
         '''
         self.send(at.PCMD(flag=0))
 
-    def pwm(self):
+    def pwm(self, motor1 = 0, motor2 = 0, motor3 = 0, motor4 = 0):
         '''
         Sends the pwm command.
         '''
-        self.send(at.PWM(self, motor1 = 0, motor2 = 0, motor3 = 0, motor4 = 0))
+        self.send(at.PWM(self, motor1, motor2, motor3, motor4))
 
+    def ftrim(self):
+        '''
+        Sends the flat trim command.
+        '''
+        self.send(at.FTRIM())
 
 
 class ARDrone(HelperMixin, VideoMixin, ARDroneBase):
